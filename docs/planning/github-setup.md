@@ -179,9 +179,41 @@ Expected end state:
 
 ---
 
-## 7. Project board (manual — needs the UI)
+## 7. Project board
 
-GitHub Projects is not scripted here because its GraphQL schema changes and the token would need the `project` scope. It takes about five minutes.
+Two paths: a script for the parts the API supports, and the UI for the parts it does not.
+
+### 7.1 Automated path (recommended)
+
+`scripts/setup-project.mjs` creates the project, renames the Status options to the six columns, creates a Board view, adds all 30 issues, and files each new item under `Backlog`. It is idempotent.
+
+It needs a token with the **`project`** scope, which the default git credential usually lacks:
+
+1. Create a classic token with `repo` + `project`:
+   <https://github.com/settings/tokens/new?scopes=repo,project&description=mihak-project>
+2. Save it once, outside the repository:
+   ```powershell
+   New-Item -ItemType Directory -Force "$env:USERPROFILE\.mihak" | Out-Null
+   $t = Read-Host "Paste the token" -AsSecureString
+   [Runtime.InteropServices.Marshal]::PtrToStringAuto(
+     [Runtime.InteropServices.Marshal]::SecureStringToBSTR($t)
+   ) | Set-Content "$env:USERPROFILE\.mihak\github-token" -NoNewline
+   ```
+3. Preview, then apply:
+   ```powershell
+   node scripts/setup-project.mjs --dry-run
+   node scripts/setup-project.mjs
+   ```
+
+Token resolution order: `GITHUB_TOKEN`, `GH_TOKEN`, `--token-file`, `MIHAK_TOKEN_FILE`, `~/.mihak/github-token`, then `git credential fill`.
+
+**What the API cannot do — finish these in the UI:**
+
+- Set the `In Progress` column limit to **2**.
+- Enable the workflows `Item closed → Done`, `Pull request merged → Done`, `Pull request linked to issue → In Review`, `Item reopened → In Progress`.
+- Confirm the Board view groups by `Status`. If it does not, open the view menu → **Group by** → `Status`.
+
+### 7.2 Manual path (fallback)
 
 1. Repository → **Projects** → **New project** → template **Board**.
 2. Name: `Mihak`.

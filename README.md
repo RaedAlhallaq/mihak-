@@ -124,6 +124,10 @@ node scripts/setup-github.mjs --repo owner/mihak --dry-run
 
 # Apply labels, milestones, and issues
 node scripts/setup-github.mjs --repo owner/mihak
+
+# Create the Project board (needs a token with the `project` scope)
+node scripts/setup-project.mjs --dry-run
+node scripts/setup-project.mjs
 ```
 
 ## License
