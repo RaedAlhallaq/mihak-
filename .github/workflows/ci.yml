@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+  DATABASE_URL: postgresql://mihak:mihak@localhost:5432/mihak?schema=public
+  REDIS_URL: redis://localhost:6379
+  ENCRYPTION_KEY: 0000000000000000000000000000000000000000000000000000000000000000
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: mihak
+          POSTGRES_PASSWORD: mihak
+          POSTGRES_DB: mihak
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U mihak -d mihak"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate planning data
+        run: |
+          node scripts/validate-plan.mjs
+          test -f docs/planning/backlog.md
+          test -f docs/planning/sprint-plan.md
+          test -f docs/planning/api-contract.md
+          test -f scripts/setup-github.mjs
+
+      # The repository starts as a planning repository with no workspace yet.
+      # Until Sprint 0 creates pnpm-workspace.yaml, the pipeline reports success
+      # instead of blocking the first pull requests on a check that cannot run.
+      - name: Detect workspace
+        id: workspace
+        run: |
+          if [ -f pnpm-workspace.yaml ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::pnpm-workspace.yaml not found. Skipping build steps until Sprint 0 lands."
+          fi
+
+      - name: Setup pnpm
+        if: steps.workspace.outputs.ready == 'true'
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node
+        if: steps.workspace.outputs.ready == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.workspace.outputs.ready == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Prisma generate and migrate
+        if: steps.workspace.outputs.ready == 'true' && hashFiles('apps/api/prisma/schema.prisma') != ''
+        run: |
+          pnpm --filter @mihak/api exec prisma generate
+          pnpm --filter @mihak/api exec prisma migrate deploy
+
+      - name: Typecheck
+        if: steps.workspace.outputs.ready == 'true'
+        run: pnpm -r --if-present run typecheck
+
+      - name: Lint
+        if: steps.workspace.outputs.ready == 'true'
+        run: pnpm -r --if-present run lint
+
+      - name: Test
+        if: steps.workspace.outputs.ready == 'true'
+        run: pnpm -r --if-present run test
+
+      - name: Build
+        if: steps.workspace.outputs.ready == 'true'
+        run: pnpm -r --if-present run build
