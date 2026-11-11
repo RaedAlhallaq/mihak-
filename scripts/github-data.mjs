@@ -27,7 +27,7 @@ export const labels = [
 export const milestones = [
   {
     title: 'Sprint 0: Setup and Planning',
-    due_on: '2026-11-18T00:00:00Z',
+    due_on: '2026-11-18T12:00:00Z',
     description: [
       'Stand up the monorepo, Postgres/Prisma, Redis/BullMQ, the shared Zod contract, a mock API, CI, and the GitHub board.',
       'Freeze the API contract before any screen is built.',
@@ -36,7 +36,7 @@ export const milestones = [
   },
   {
     title: 'Sprint 1: Core Pipeline',
-    due_on: '2026-11-25T00:00:00Z',
+    due_on: '2026-11-25T12:00:00Z',
     description: [
       'Deliver the first end-to-end pipeline: input, create run, worker execution with the fake provider, incremental persistence, and a status page.',
       'Every call is persisted as it finishes, so progress is visible before the run ends.',
@@ -45,7 +45,7 @@ export const milestones = [
   },
   {
     title: 'Sprint 2: Core Differentiator',
-    due_on: '2026-12-02T00:00:00Z',
+    due_on: '2026-12-02T12:00:00Z',
     description: [
       'Add the product differentiator: rubric-based LLM judging, verdict persistence, results aggregation, and the comparison table with ranking.',
       'Scores stay explainable: every model can be opened per case with its dimensions and reasoning data.',
@@ -54,7 +54,7 @@ export const milestones = [
   },
   {
     title: 'Sprint 3: Output + Polish',
-    due_on: '2026-12-09T00:00:00Z',
+    due_on: '2026-12-09T12:00:00Z',
     description: [
       'Complete the output surface and the quality bar: per-case outputs, loading/empty/error states, full Arabic/English localization, cost breakdown, and unit tests.',
       'Cost is proven by tests, not by inspection: integer micro-USD with a worked example in the suite.',
@@ -63,7 +63,7 @@ export const milestones = [
   },
   {
     title: 'Sprint 4: Enhancements & Business Value',
-    due_on: '2026-12-16T00:00:00Z',
+    due_on: '2026-12-16T12:00:00Z',
     description: [
       'Add trust, integration, and durability: encrypted keys, provider settings and connection test, price snapshots, and stale-run recovery.',
       'Old runs stay immutable: a price change never rewrites history, and a crashed worker never stalls the queue.',
@@ -72,7 +72,7 @@ export const milestones = [
   },
   {
     title: 'Sprint 5: Deployment & Demo Readiness',
-    due_on: '2026-12-23T00:00:00Z',
+    due_on: '2026-12-23T12:00:00Z',
     description: [
       'Make it deployable and demo-ready: Docker, staging deployment, E2E smoke test, demo script, backup video, and final README.',
       'The demo must survive a live failure: a recorded fallback and copy-paste commands are part of the increment.',

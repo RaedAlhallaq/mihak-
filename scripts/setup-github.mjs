@@ -126,8 +126,12 @@ async function ensureMilestones() {
     }
 
     numbers.set(milestone.title, current.number);
+    // GitHub normalizes milestone due dates to a date, so compare dates only.
+    // Noon UTC avoids an off-by-one when the API truncates to a timezone date.
+    const currentDate = current.due_on ? new Date(current.due_on).toISOString().slice(0, 10) : '';
+    const desiredDate = new Date(milestone.due_on).toISOString().slice(0, 10);
     const changed =
-      new Date(current.due_on || 0).toISOString() !== new Date(milestone.due_on).toISOString() ||
+      currentDate !== desiredDate ||
       (current.description || '') !== milestone.description;
     if (!changed) {
       stats.milestones.unchanged += 1;
