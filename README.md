@@ -132,4 +132,6 @@ node scripts/setup-project.mjs
 
 ## License
 
-Private until further notice.
+This repository is public so the planning work and the build can be reviewed openly.
+
+No license is granted yet, so all rights are reserved. If you want others to reuse the code, add a license (for example MIT) in a dedicated issue.
