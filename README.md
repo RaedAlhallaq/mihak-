@@ -44,6 +44,17 @@ mihak/
 ├─ packages/
 │  └─ shared/               # Zod schemas and inferred types
 ├─ docs/
+│  ├─ 01-brief.md           # the idea on one page
+│  ├─ 02-spec.md            # stories, acceptance criteria, NFRs, constraints
+│  ├─ 03-domain.md          # glossary, diagrams, invariants
+│  ├─ 04-architecture.md    # context + containers
+│  ├─ adr/                  # architecture decision records
+│  ├─ index.md              # which doc for which task
+│  ├─ context-order.md      # stable first, changing last
+│  ├─ progress.md           # short-term memory
+│  ├─ lessons.md            # long-term memory with survival checks
+│  ├─ review-checklist.md   # ten questions per diff
+│  ├─ prompts.md            # lecture prompts adapted to Mihak
 │  ├─ planning/
 │  │  ├─ backlog.md         # generated, 30 issues
 │  │  ├─ sprint-plan.md     # 6 sprints, critical path, risks
@@ -51,6 +62,9 @@ mihak/
 │  │  ├─ github-setup.md    # labels, milestones, board, protection
 │  │  └─ sprint-retro.md    # appended at the end of each sprint
 │  └─ journal/              # three lines a day
+├─ evals/tasks.md           # three fixed context eval tasks
+├─ AGENTS.md                # canonical agent rules
+├─ CLAUDE.md                # one line: @AGENTS.md
 ├─ scripts/
 │  ├─ github-data.mjs       # single source of truth: labels, milestones, issues
 │  ├─ setup-github.mjs      # idempotent GitHub setup
@@ -88,6 +102,26 @@ Planned root scripts: `dev`, `build`, `typecheck`, `lint`, `test`, `format`.
 | [`docs/planning/github-setup.md`](docs/planning/github-setup.md) | Repository, token, script, board, and branch-protection steps. |
 | [`docs/planning/sprint-retro.md`](docs/planning/sprint-retro.md) | One section per sprint: planned vs done, wins, fixes. |
 | [`docs/journal/`](docs/journal/) | Three lines a day: done / next / stuck. |
+
+## Repository memory (lecture artifacts)
+
+Planning files required by the lectures. No product code exists yet; `src/` and `tests/` start with issue #1.
+
+| File | Role |
+|---|---|
+| [`AGENTS.md`](AGENTS.md) | Canonical rules read at the start of every agent session; `CLAUDE.md` imports it with one line. |
+| [`docs/01-brief.md`](docs/01-brief.md) | The idea on one page: problem, users, success signal, what we will not build. |
+| [`docs/02-spec.md`](docs/02-spec.md) | Specification: stories, Given/When/Then acceptance criteria, measurable NFRs, constraints, business rules, assumptions. |
+| [`docs/03-domain.md`](docs/03-domain.md) | Glossary with code names, Mermaid ER/state/sequence diagrams, invariants, consistency matrix. |
+| [`docs/04-architecture.md`](docs/04-architecture.md) | System context and containers, module boundaries, pattern choices. |
+| [`docs/adr/`](docs/adr/) | Accepted decisions with options and consequences; never edited in place. |
+| [`docs/index.md`](docs/index.md) | Which document to open for which task. |
+| [`docs/context-order.md`](docs/context-order.md) | Stable context first, changing context last. |
+| [`docs/progress.md`](docs/progress.md) | Short-term memory for the current story. |
+| [`docs/lessons.md`](docs/lessons.md) | Long-term memory: each lesson has a check that can delete it. |
+| [`docs/review-checklist.md`](docs/review-checklist.md) | Ten review questions and the fixed diff reading order. |
+| [`docs/prompts.md`](docs/prompts.md) | The lecture prompts adapted to Mihak, with stop conditions. |
+| [`evals/tasks.md`](evals/tasks.md) | Three fixed tasks to measure a context change before and after. |
 
 ## Sprint status
 
