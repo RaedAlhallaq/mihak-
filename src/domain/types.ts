@@ -18,16 +18,39 @@ export interface EvalItem {
   expectedOutput?: string;
 }
 
+export interface JudgeRubric {
+  rubricId: string;
+  name: string;
+  criteria: string; // E.g., "Accuracy, conciseness, and code formatting"
+  maxScore: number; // E.g., 10 or 100
+}
+
 export interface JudgeScore {
-  score: number; // 0.0 to 1.0 or 1 to 10
+  score: number;
+  maxScore: number;
   reasoning: string;
-  rubricName: string;
+  rubricId: string;
 }
 
 export interface JudgeEvaluation {
   evalItemId: string;
   targetModel: string;
   judgeScore: JudgeScore;
+}
+
+export interface JudgeEvaluationRequest {
+  evalItemId: string;
+  prompt: string;
+  modelOutputContent: string;
+  rubric: JudgeRubric;
+}
+
+export interface JudgeEvaluationResponse {
+  evalItemId: string;
+  judgeModel: string;
+  score: JudgeScore;
+  status: 'success' | 'error';
+  errorMessage?: string;
 }
 
 export interface EvalResult {
